@@ -1,0 +1,26 @@
+{
+  "name": "angular-essential",
+  "version": "0.0.1",
+  "homepage": "https://github.com/zerohouse/angular-essential",
+  "authors": [
+    "dev <parksungho86@gmail.com>"
+  ],
+  "description": "angular utils",
+  "main": "./angular-essential.js",
+  "moduleType": [],
+  "keywords": [
+    "util",
+    "angular"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.9"
+  }
+}
