@@ -57,7 +57,7 @@ angular.module('angular.essential', [])
                     elem.off('click', handler);
                 });
 
-                clickAnywhereButHereService(scope, attr.clickAnywhereButHere);
+                ngClickOtherService(scope, attr.ngClickOther);
             }
         };
     })
