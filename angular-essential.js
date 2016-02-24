@@ -117,8 +117,10 @@ angular.module('angular.essential', [])
                 if (!success)
                     return;
                 for (var i = 0; i < handlers.length; i++) {
-                    if (!handlers[i](response))
+                    if (!handlers[i](response)) {
+                        error(response);
                         return;
+                    }
                 }
                 success(response);
             }).error(function (e) {
