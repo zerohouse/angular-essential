@@ -32,9 +32,13 @@ angular.module('angular.essential', [])
                     return t;
                 }
             }
-            var handler = function () {
-                $scope.$apply(expr);
-            };
+            var handler;
+            if (typeof expr === "function")
+                handler = expr;
+            else
+                handler = function () {
+                    $scope.$apply(expr);
+                };
             $document.on('click', handler);
             $scope.$on('$destroy', function () {
                 $document.off('click', handler);
