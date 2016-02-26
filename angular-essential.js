@@ -24,7 +24,7 @@ angular.module('angular.essential', [])
     })
     .factory('ngClickOtherService', function ($document) {
         var tracker = [];
-        return function ($scope, expr) {
+        return function ($scope, expr, elem) {
             var i, t, len;
             for (i = 0, len = tracker.length; i < len; i++) {
                 t = tracker[i];
@@ -33,8 +33,16 @@ angular.module('angular.essential', [])
                 }
             }
             var handler;
-            if (typeof expr === "function")
+            if (typeof expr === "function" && elem) {
                 handler = expr;
+                var stop = function (e) {
+                    e.stopPropagation();
+                };
+                elem.on('click', stop);
+                $scope.$on('$destroy', function () {
+                    elem.off('click', stop);
+                });
+            }
             else
                 handler = function () {
                     $scope.$apply(expr);
