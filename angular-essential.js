@@ -200,7 +200,7 @@ angular.module('angular.essential', [])
 
                 // This runs when we update the text field
                 ngModelCtrl.$parsers.push(function (viewValue) {
-                    return viewValue.replace(/[^0-9]/g, '').slice(0, 10);
+                    return viewValue.replace(/[^0-9]/g, '');
                 });
 
                 // This runs when the model gets updated on the scope directly and keeps our view in sync
@@ -256,7 +256,7 @@ angular.module('angular.essential', [])
 
                 // This runs when we update the text field
                 ngModelCtrl.$parsers.push(function (viewValue) {
-                    return viewValue.replace(/[^0-9]/g, '').slice(0, 10);
+                    return viewValue.replace(/[^0-9]/g, '');
                 });
 
                 // This runs when the model gets updated on the scope directly and keeps our view in sync
