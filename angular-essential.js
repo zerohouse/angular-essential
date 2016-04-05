@@ -43,67 +43,31 @@ angular.module('angular.essential', [])
             }
         };
     })
-    .factory('ngClickOtherService', function ($document) {
-        var tracker = [];
-        return function ($scope, expr, elem) {
-            var i, t, len;
-            for (i = 0, len = tracker.length; i < len; i++) {
-                t = tracker[i];
-                if (t.expr === expr && t.scope === $scope) {
-                    return t;
-                }
-            }
-            var handler;
-            if (typeof expr === "function" && elem) {
-                handler = expr;
-                var stop = function (e) {
-                    e.stopPropagation();
-                };
-                elem.on('click', stop);
-                $scope.$on('$destroy', function () {
-                    elem.off('click', stop);
-                });
-            }
-            else
-                handler = function () {
-                    $scope.$apply(expr);
-                };
-            $document.on('click', handler);
-            $scope.$on('$destroy', function () {
-                $document.off('click', handler);
-            });
-            t = {scope: $scope, expr: expr};
-            tracker.push(t);
-            return t;
-        };
-    })
-    .directive('ngClickOther', function ($document, ngClickOtherService) {
-        return {
-            restrict: 'A',
-            link: function (scope, elem, attr, ctrl) {
-                var handler = function (e) {
-                    e.stopPropagation();
-                };
-                elem.on('click', handler);
-
-                scope.$on('$destroy', function () {
-                    elem.off('click', handler);
-                });
-
-                ngClickOtherService(scope, attr.ngClickOther);
-            }
-        };
-    })
     .service('$hangul', function () {
-        this.getERO = function (word) {
-            var last = word.charAt(word.length - 1);
-            console.log(word, last);
-            if (!is_hangul_char(last))
-                return word + "(으)로";
-            if (tSound(last) === "ᆧ")
-                return word + "로";
-            return word + "으로";
+        this.get_With_으로 = function (word) {
+            return checkLastChar(word, "(으)로", "로", "으로");
         };
+
+        this.get_With_이가 = function (word) {
+            return checkLastChar(word, "(이)로", "가", "이");
+        };
+
+        this.get_With_은는 = function (word) {
+            return checkLastChar(word, "(은)는", "는", "은");
+        };
+
+        this.get_With_와과 = function (word) {
+            return checkLastChar(word, "(와)과", "와", "과");
+        };
+
+        function checkLastChar(word, ifNotHangul, hasJongSung, hasNot){
+            var last = word.charAt(word.length - 1);
+            if (!is_hangul_char(last))
+                return word + ifNotHangul;
+            if (tSound(last) === "ᆧ")
+                return word + hasJongSung;
+            return word + hasNot;
+        }
 
         function tSound(a) {
             var r = (a.charCodeAt(0) - parseInt('0xac00', 16)) % 28;
