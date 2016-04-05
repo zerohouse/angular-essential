@@ -56,6 +56,10 @@ angular.module('angular.essential', [])
             return checkLastChar(word, "(은)는", "는", "은");
         };
 
+        this.get_With_을를 = function (word) {
+            return checkLastChar(word, "(을)를", "를", "을");
+        };
+
         this.get_With_와과 = function (word) {
             return checkLastChar(word, "(와)과", "와", "과");
         };
