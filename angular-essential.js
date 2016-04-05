@@ -49,7 +49,7 @@ angular.module('angular.essential', [])
         };
 
         this.get_With_이가 = function (word) {
-            return checkLastChar(word, "(이)로", "가", "이");
+            return checkLastChar(word, "(이)가", "가", "이");
         };
 
         this.get_With_은는 = function (word) {
