@@ -43,6 +43,17 @@ angular.module('angular.essential', [])
             }
         };
     })
+    .directive('ngOnError', function () {
+        return {
+            link: function (scope, element, attrs) {
+                element.bind('error', function () {
+                    scope.$apply(function () {
+                        scope.$eval(attrs.ngOnError);
+                    });
+                });
+            }
+        }
+    })
     .service('$hangul', function () {
         this.get_With_으로 = function (word) {
             return checkLastChar(word, "(으)로", "로", "으로");
@@ -64,7 +75,7 @@ angular.module('angular.essential', [])
             return checkLastChar(word, "(와)과", "와", "과");
         };
 
-        function checkLastChar(word, ifNotHangul, hasJongSung, hasNot){
+        function checkLastChar(word, ifNotHangul, hasJongSung, hasNot) {
             var last = word.charAt(word.length - 1);
             if (!is_hangul_char(last))
                 return word + ifNotHangul;
