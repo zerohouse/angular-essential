@@ -86,7 +86,7 @@ angular.module('angular.essential', [])
         }
     })
     .factory('$ajax', ['$http', '$q', function ($http, $q) {
-        var handlers = [];
+        var handler;
         var $ajax = function (method, url, params, success, error, json) {
             var options = {
                 method: method, url: url
@@ -114,15 +114,11 @@ angular.module('angular.essential', [])
             }
 
             $http(options).success(function (response) {
-                if (!success)
+                if (!handler) {
+                    success(response);
                     return;
-                for (var i = 0; i < handlers.length; i++) {
-                    if (!handlers[i](response)) {
-                        error(response);
-                        return;
-                    }
                 }
-                success(response);
+                handler(success, error);
             }).error(function (e) {
                 if (!error)
                     return;
@@ -152,7 +148,7 @@ angular.module('angular.essential', [])
         $ajax.handler = function (fn) {
             if (typeof fn !== 'function')
                 throw "fn type not matched";
-            handlers.push(fn);
+            handler = fn;
         };
         return $ajax;
     }]);
