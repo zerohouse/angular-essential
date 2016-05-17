@@ -130,7 +130,7 @@ angular.module('angular.essential', [])
                     success(response);
                     return;
                 }
-                handler(success, error);
+                handler(response, success, error);
             }).error(function (e) {
                 if (!error)
                     return;
