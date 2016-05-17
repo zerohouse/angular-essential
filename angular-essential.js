@@ -324,7 +324,11 @@ angular.module('angular.essential', [])
                 return card;
             }
             if (value) {
-                return value.slice(0, 3) + '-' + value.slice(3, 5) + '-' + value.slice(5, 10);
+                if (value.length > 5)
+                    return value.slice(0, 3) + '-' + value.slice(3, 5) + '-' + value.slice(5, 10);
+                if (value.length > 3)
+                    return value.slice(0, 3) + '-' + value.slice(3, 5);
+                return value;
             }
         };
     });
