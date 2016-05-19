@@ -99,7 +99,10 @@ angular.module('angular.essential', [])
     })
     .factory('$ajax', ['$http', '$q', function ($http, $q) {
         var handler;
+        var before = [];
+        var after = [];
         var $ajax = function (method, url, params, success, error, json) {
+            before.forEach(function(fn){fn()});
             var options = {
                 method: method, url: url
             };
@@ -126,12 +129,14 @@ angular.module('angular.essential', [])
             }
 
             $http(options).success(function (response) {
+                after.forEach(function(fn){fn()});
                 if (!handler) {
                     success(response);
                     return;
                 }
                 handler(response, success, error);
             }).error(function (e) {
+                after.forEach(function(fn){fn()});
                 if (!error)
                     return;
                 error(e);
@@ -161,6 +166,16 @@ angular.module('angular.essential', [])
             if (typeof fn !== 'function')
                 throw "fn type not matched";
             handler = fn;
+        };
+        $ajax.before = function(fn){
+            if (typeof fn !== 'function')
+                throw "fn type not matched";
+            before.push(fn);
+        };
+        $ajax.after = function(fn){
+            if (typeof fn !== 'function')
+                throw "fn type not matched";
+            after.push(fn)
         };
         return $ajax;
     }])
