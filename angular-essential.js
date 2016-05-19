@@ -102,7 +102,9 @@ angular.module('angular.essential', [])
         var before = [];
         var after = [];
         var $ajax = function (method, url, params, success, error, json) {
-            before.forEach(function(fn){fn()});
+            before.forEach(function (fn) {
+                fn()
+            });
             var options = {
                 method: method, url: url
             };
@@ -129,14 +131,18 @@ angular.module('angular.essential', [])
             }
 
             $http(options).success(function (response) {
-                after.forEach(function(fn){fn()});
+                after.forEach(function (fn) {
+                    fn()
+                });
                 if (!handler) {
                     success(response);
                     return;
                 }
                 handler(response, success, error);
             }).error(function (e) {
-                after.forEach(function(fn){fn()});
+                after.forEach(function (fn) {
+                    fn()
+                });
                 if (!error)
                     return;
                 error(e);
@@ -167,21 +173,23 @@ angular.module('angular.essential', [])
                 throw "fn type not matched";
             handler = fn;
         };
-        $ajax.before = function(fn, scope){
+        $ajax.before = function (fn, scope) {
             if (typeof fn !== 'function')
                 throw "fn type not matched";
             before.push(fn);
-            scope.$on('$destroy', function() {
-                before.remove(fn);
-            });
+            if (scope.$on)
+                scope.$on('$destroy', function () {
+                    before.remove(fn);
+                });
         };
-        $ajax.after = function(fn, scope){
+        $ajax.after = function (fn, scope) {
             if (typeof fn !== 'function')
                 throw "fn type not matched";
-            after.push(fn)
-            scope.$on('$destroy', function() {
-                after.remove(fn);
-            });
+            after.push(fn);
+            if (scope.$on)
+                scope.$on('$destroy', function () {
+                    after.remove(fn);
+                });
         };
         return $ajax;
     }])
