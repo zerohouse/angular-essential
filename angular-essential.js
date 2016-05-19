@@ -102,8 +102,10 @@ angular.module('angular.essential', [])
         var before = [];
         var after = [];
         var $ajax = function (method, url, params, success, error, json) {
+            var self = this;
+            self.progress = true;
             before.forEach(function (fn) {
-                fn()
+                fn();
             });
             var options = {
                 method: method, url: url
@@ -131,6 +133,7 @@ angular.module('angular.essential', [])
             }
 
             $http(options).success(function (response) {
+                self.progress = false;
                 after.forEach(function (fn) {
                     fn()
                 });
@@ -140,6 +143,7 @@ angular.module('angular.essential', [])
                 }
                 handler(response, success, error);
             }).error(function (e) {
+                self.progress = false;
                 after.forEach(function (fn) {
                     fn()
                 });
