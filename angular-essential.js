@@ -101,7 +101,7 @@ angular.module('angular.essential', [])
         var handler;
         var before = [];
         var after = [];
-        var $ajax = function (method, url, params, success, error, json) {
+        var $ajax = function (method, url, params, success, error, json, upload) {
             var self = this;
             self.progress = true;
             before.forEach(function (fn) {
@@ -112,6 +112,8 @@ angular.module('angular.essential', [])
             };
             if (json)
                 options.headers = {'Content-Type': 'application/json'};
+            else if (upload)
+                options.headers = {'Content-Type': undefined};
             else
                 options.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 
@@ -119,6 +121,14 @@ angular.module('angular.essential', [])
                 options.params = params;
             else if (json)
                 options.data = params;
+            else if (upload) {
+                var fd = new FormData();
+                for (var key in params) {
+                    fd.append(key, params[key]);
+                }
+                options.data = fd;
+                options.transformRequest = angular.identity;
+            }
             else {
                 options.transformRequest = function (obj) {
                     var str = [];
@@ -170,6 +180,11 @@ angular.module('angular.essential', [])
         $ajax.delete = function (url, params) {
             return $q(function (resolve, reject) {
                 $ajax("DELETE", url, params, resolve, reject);
+            });
+        };
+        $ajax.upload = function (url, params) {
+            return $q(function (resolve, reject) {
+                $ajax("POST", url, params, resolve, reject, false, true);
             });
         };
         $ajax.handler = function (fn) {
