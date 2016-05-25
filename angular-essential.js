@@ -316,12 +316,23 @@ angular.module('angular.essential', [])
             if (value) {
                 if (value.length > 10)
                     return value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
-                if (value.length >= 10)
+                if (value.length == 10) {
+                    if (value.charAt(1) === "2")
+                        return value.slice(0, 2) + '-' + value.slice(2, 6) + '-' + value.slice(6);
                     return value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6, 10);
-                if (value.length > 7)
-                    return value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
-                if (value.length > 3)
-                    return value.slice(0, 3) + '-' + value.slice(3, 7);
+                }
+                if (value.length > 5) {
+                    if (value.charAt(1) === "2")
+                        return value.slice(0, 2) + '-' + value.slice(2, 5) + '-' + value.slice(5);
+                    if (value.length > 7)
+                        return value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
+                }
+                if (value.length > 2) {
+                    if (value.charAt(1) === "2")
+                        return value.slice(0, 2) + '-' + value.slice(2, 5);
+                    if (value.length > 3)
+                        return value.slice(0, 3) + '-' + value.slice(3, 7);
+                }
                 return value;
             }
         };
