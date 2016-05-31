@@ -117,8 +117,10 @@ angular.module('angular.essential', [])
             else
                 options.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 
-            if (method === "GET" || method === "DELETE")
+            if (method === "GET" || method === "DELETE") {
+                options.url +=  "?dc=" + new Date().getTime().toString();
                 options.params = params;
+            }
             else if (json)
                 options.data = params;
             else if (upload) {
