@@ -97,7 +97,7 @@ angular.module('angular.essential', [])
 
         }
     })
-    .factory('$ajax', ['$http', '$q', function ($http, $q, $rootScope) {
+    .factory('$ajax', ['$http', '$q', '$rootScope', function ($http, $q, $rootScope) {
         var handler;
         var before = [];
         var after = [];
