@@ -97,11 +97,12 @@ angular.module('angular.essential', [])
 
         }
     })
-    .factory('$ajax', ['$http', '$q', function ($http, $q) {
+    .factory('$ajax', ['$http', '$q', function ($http, $q, $rootScope) {
         var handler;
         var before = [];
         var after = [];
         var $ajax = function (method, url, params, success, error, json, upload) {
+            $rootScope.$broadcast('ajax-start');
             var self = this;
             self.progress = true;
             before.forEach(function (fn) {
@@ -145,6 +146,7 @@ angular.module('angular.essential', [])
             }
 
             $http(options).success(function (response) {
+                $rootScope.$broadcast('ajax-done');
                 self.progress = false;
                 after.forEach(function (fn) {
                     fn()
@@ -155,6 +157,7 @@ angular.module('angular.essential', [])
                 }
                 handler(response, success, error);
             }).error(function (e) {
+                $rootScope.$broadcast('ajax-done');
                 self.progress = false;
                 after.forEach(function (fn) {
                     fn()
