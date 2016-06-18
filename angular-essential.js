@@ -28,7 +28,7 @@ angular.module('angular.essential', [])
             link: function (scope, element, attr, ngModelCtrl) {
                 function fromUser(text) {
                     if (text) {
-                        var transformedInput = text.replace(/[^0-9]/g, '');
+                        var transformedInput = text[0] == "-" ? "-" + text.replace(/[^0-9]/g, '') : text.replace(/[^0-9]/g, '');
 
                         if (transformedInput !== text) {
                             ngModelCtrl.$setViewValue(transformedInput);
@@ -119,7 +119,7 @@ angular.module('angular.essential', [])
                 options.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 
             if (method === "GET" || method === "DELETE") {
-                options.url +=  "?dc=" + new Date().getTime().toString();
+                options.url += "?dc=" + new Date().getTime().toString();
                 options.params = params;
             }
             else if (json)
