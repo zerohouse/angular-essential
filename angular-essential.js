@@ -75,18 +75,18 @@ angular.module('angular.essential', [])
             return checkLastChar(word, "(와)과", "와", "과");
         };
 
-        function checkLastChar(word, ifNotHangul, hasJongSung, hasNot) {
+        function checkLastChar(word, ifNotHangul, noJongSung, hasJongSung) {
             if (typeof word !== "string") word = word.toString();
             var last = word.charAt(word.length - 1);
             if (/[013678]/.test(last))
                 return word + hasJongSung;
             if (/[2459]/.test(last))
-                return word + hasNot;
+                return word + noJongSung;
             if (!is_hangul_char(last))
                 return word + ifNotHangul;
             if (tSound(last) === "ᆧ")
-                return word + hasJongSung;
-            return word + hasNot;
+                return word + noJongSung;
+            return word + hasJongSung;
         }
 
         function tSound(a) {
