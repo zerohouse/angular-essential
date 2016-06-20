@@ -76,6 +76,7 @@ angular.module('angular.essential', [])
         };
 
         function checkLastChar(word, ifNotHangul, hasJongSung, hasNot) {
+            if (typeof word !== "string") word = word.toString();
             var last = word.charAt(word.length - 1);
             if (/[013678]/.test(last))
                 return word + hasJongSung;
