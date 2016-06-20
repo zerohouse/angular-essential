@@ -55,28 +55,32 @@ angular.module('angular.essential', [])
         }
     })
     .service('$hangul', function () {
-        this.get_With_으로 = function (word) {
+        this["으로"] = function (word) {
             return checkLastChar(word, "(으)로", "로", "으로");
         };
 
-        this.get_With_이가 = function (word) {
+        this["이가"] = function (word) {
             return checkLastChar(word, "(이)가", "가", "이");
         };
 
-        this.get_With_은는 = function (word) {
+        this["은는"] = function (word) {
             return checkLastChar(word, "(은)는", "는", "은");
         };
 
-        this.get_With_을를 = function (word) {
+        this["을를"] = function (word) {
             return checkLastChar(word, "(을)를", "를", "을");
         };
 
-        this.get_With_와과 = function (word) {
+        this["와과"] = function (word) {
             return checkLastChar(word, "(와)과", "와", "과");
         };
 
         function checkLastChar(word, ifNotHangul, hasJongSung, hasNot) {
             var last = word.charAt(word.length - 1);
+            if (/[013678]/.test(last))
+                return word + hasJongSung;
+            if (/[2459]/.test(last))
+                return word + hasNot;
             if (!is_hangul_char(last))
                 return word + ifNotHangul;
             if (tSound(last) === "ᆧ")
