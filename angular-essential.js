@@ -124,7 +124,7 @@ angular.module('angular.essential', [])
                 options.headers = {'Content-Type': undefined};
             else
                 options.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-
+            angular.merge(options.headers, $ajax.headers);
             if (method === "GET" || method === "DELETE") {
                 options.url += "?dc=" + new Date().getTime().toString();
                 options.params = params;
@@ -174,6 +174,7 @@ angular.module('angular.essential', [])
                 error(e);
             });
         };
+        $ajax.headers = {};
         $ajax.get = function (url, params) {
             return $q(function (resolve, reject) {
                 $ajax("GET", url, params, resolve, reject);
@@ -200,6 +201,11 @@ angular.module('angular.essential', [])
             });
         };
         $ajax.handler = function (fn) {
+            if (typeof fn !== 'function')
+                throw "fn type not matched";
+            handler = fn;
+        };
+        $ajax.headers = function (fn) {
             if (typeof fn !== 'function')
                 throw "fn type not matched";
             handler = fn;
