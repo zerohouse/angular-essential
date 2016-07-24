@@ -115,6 +115,8 @@ angular.module('angular.essential', [])
             before.forEach(function (fn) {
                 fn();
             });
+            if ($ajax.url)
+                url = $ajax.url + url;
             var options = {
                 method: method, url: url
             };
