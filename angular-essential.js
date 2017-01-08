@@ -217,7 +217,7 @@ angular.module('angular.essential', [])
             if (typeof fn !== 'function')
                 throw "fn type not matched";
             before.push(fn);
-            if (scope.$on)
+            if (scope && scope.$on)
                 scope.$on('$destroy', function () {
                     before.remove(fn);
                 });
@@ -226,7 +226,7 @@ angular.module('angular.essential', [])
             if (typeof fn !== 'function')
                 throw "fn type not matched";
             after.push(fn);
-            if (scope.$on)
+            if (scope && scope.$on)
                 scope.$on('$destroy', function () {
                     after.remove(fn);
                 });
