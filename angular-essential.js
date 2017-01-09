@@ -208,11 +208,6 @@ angular.module('angular.essential', [])
                 throw "fn type not matched";
             handler = fn;
         };
-        $ajax.headers = function (fn) {
-            if (typeof fn !== 'function')
-                throw "fn type not matched";
-            handler = fn;
-        };
         $ajax.before = function (fn, scope) {
             if (typeof fn !== 'function')
                 throw "fn type not matched";
