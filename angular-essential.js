@@ -108,7 +108,7 @@ angular.module('angular.essential', [])
         var handler;
         var before = [];
         var after = [];
-        var $ajax = function (method, url, params, success, error, json, upload) {
+        var $ajax = function (method, url, params, success, error, headers) {
             $rootScope.$broadcast('ajax-start');
             var self = this;
             self.progress = true;
@@ -117,23 +117,44 @@ angular.module('angular.essential', [])
             });
             if ($ajax.url && !(url.startsWith("http://") || url.startsWith("https://")))
                 url = $ajax.url + url;
+
+            function setContentType(headers, passed) {
+                if (!passed)
+                    headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                if (passed === 'form' || headers === 'upload')
+                    headers['Content-Type'] = 'multipart/form-data';
+                if (passed === true || headers === 'json')
+                    headers['Content-Type'] = 'application/json';
+                if (typeof passed === 'object') {
+                    if (!headers['Content-Type'])
+                        if (passed.json) {
+                            headers['Content-Type'] = 'application/json';
+                            delete passed.json;
+                        }
+                        else if (passed.form) {
+                            headers['Content-Type'] = 'multipart/form-data';
+                            delete passed.form;
+                        }
+                        else
+                            headers['Content-Type'] = 'multipart/form-data';
+                    angular.merge(headers, passed);
+                }
+            }
+
+            var finalHeaders = {};
+            angular.copy($ajax.headers, finalHeaders);
+            setContentType(finalHeaders, headers);
             var options = {
-                method: method, url: url
+                method: method, url: url, headers: finalHeaders
             };
-            if (json)
-                options.headers = {'Content-Type': 'application/json'};
-            else if (upload)
-                options.headers = {'Content-Type': undefined};
-            else
-                options.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-            angular.merge(options.headers, $ajax.headers);
+
             if (method === "GET" || method === "DELETE") {
                 options.url += "?dc=" + new Date().getTime().toString();
                 options.params = params;
             }
-            else if (json)
+            else if (options.headers && options.headers['Content-Type'] === 'application/json')
                 options.data = params;
-            else if (upload) {
+            else if (options.headers && options.headers['Content-Type'] === 'multipart/form-data') {
                 var fd = new FormData();
                 for (var key in params) {
                     fd.append(key, params[key]);
@@ -183,24 +204,19 @@ angular.module('angular.essential', [])
                 $ajax("GET", url, params, resolve, reject);
             });
         };
-        $ajax.post = function (url, params, json) {
+        $ajax.post = function (url, params, headers) {
             return $q(function (resolve, reject) {
-                $ajax("POST", url, params, resolve, reject, json);
+                $ajax("POST", url, params, resolve, reject, headers);
             });
         };
-        $ajax.put = function (url, params, json) {
+        $ajax.put = function (url, params, headers) {
             return $q(function (resolve, reject) {
-                $ajax("PUT", url, params, resolve, reject, json);
+                $ajax("PUT", url, params, resolve, reject, headers);
             });
         };
-        $ajax.delete = function (url, params) {
+        $ajax.delete = function (url, params, headers) {
             return $q(function (resolve, reject) {
-                $ajax("DELETE", url, params, resolve, reject);
-            });
-        };
-        $ajax.upload = function (url, params) {
-            return $q(function (resolve, reject) {
-                $ajax("POST", url, params, resolve, reject, false, true);
+                $ajax("DELETE", url, params, resolve, reject, headers);
             });
         };
         $ajax.handler = function (fn) {
