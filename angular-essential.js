@@ -199,9 +199,9 @@ angular.module('angular.essential', [])
             });
         };
         $ajax.headers = {};
-        $ajax.get = function (url, params) {
+        $ajax.get = function (url, params, headers) {
             return $q(function (resolve, reject) {
-                $ajax("GET", url, params, resolve, reject);
+                $ajax("GET", url, params, resolve, reject, headers);
             });
         };
         $ajax.post = function (url, params, headers) {
