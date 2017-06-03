@@ -193,9 +193,12 @@ angular.module('angular.essential', [])
                 after.forEach(function (fn) {
                     fn()
                 });
-                if (!error)
-                    return;
-                error(e);
+                if (!handler) {
+                    if (!error)
+                        return;
+                    error(e);
+                }
+                handler(e, success, error);
             });
         };
         $ajax.headers = {};
@@ -423,4 +426,3 @@ angular.module('angular.essential', [])
             }
         };
     });
-
